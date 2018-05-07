@@ -278,13 +278,13 @@ class MyQ {
   }
 
   setDoorState(id, toggle) {
-    return setDeviceState(id, toggle, 'desireddoorstate')
+    return setDeviceState(this, id, toggle, 'desireddoorstate')
       .then(result => result)
       .catch(err => returnError(11, err));
   }
 
   setLightState(id, toggle) {
-    return setDeviceState(id, toggle, 'desiredlightstate')
+    return setDeviceState(this, id, toggle, 'desiredlightstate')
       .then(result => result)
       .catch(err => returnError(11, err));
   }
