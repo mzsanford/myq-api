@@ -14,18 +14,22 @@ const returnError = (returnCode, err) => {
   return result;
 };
 
-const getDeviceState = (id, attributeName) => {
-  if (!this.securityToken) {
+const getDeviceState = (_this, id, attributeName) => {
+  if (!_this.securityToken) {
     return Promise.resolve(returnError(13));
   }
 
   return axios({
     method: 'get',
     url: `${constants.endpoint}/api/v4/deviceattribute/getdeviceattribute`,
+    headers: {
+      Accept: '*/*',
+      MyQApplicationId: constants.appId,
+      SecurityToken: _this.securityToken,
+    },
     params: {
-      appId: constants.appId,
-      SecurityToken: this.securityToken,
       MyQDeviceId: id,
+      SecurityToken: _this.securityToken,
       AttributeName: attributeName,
     },
   })
@@ -60,8 +64,8 @@ const getDeviceState = (id, attributeName) => {
     });
 };
 
-const setDeviceState = (id, toggle, attributeName) => {
-  if (!this.securityToken) {
+const setDeviceState = (_this, id, toggle, attributeName) => {
+  if (!_this.securityToken) {
     return Promise.resolve(returnError(13));
   } else if (toggle !== 0 && toggle !== 1) {
     return Promise.resolve(returnError(15));
@@ -72,7 +76,7 @@ const setDeviceState = (id, toggle, attributeName) => {
     url: `${constants.endpoint}/api/v4/deviceattribute/putdeviceattribute`,
     headers: {
       MyQApplicationId: constants.appId,
-      securityToken: this.securityToken,
+      securityToken: _this.securityToken,
     },
     data: {
       MyQDeviceId: id,
@@ -181,10 +185,11 @@ class MyQ {
     return axios({
       method: 'get',
       url: `${constants.endpoint}/api/v4/userdevicedetails/get`,
-      params: {
-        appId: constants.appId,
+      headers: {
+        Accept: '*/*',
+        MyQApplicationId: constants.appId,
         SecurityToken: this.securityToken,
-      },
+      }
     })
       .then(response => {
         if (!response || !response.data) {
@@ -241,7 +246,7 @@ class MyQ {
   }
 
   getDoorState(id) {
-    return getDeviceState(id, 'doorstate')
+    return getDeviceState(this, id, 'doorstate')
       .then(result => {
         if (result.returnCode !== 0) {
           return result;
@@ -257,7 +262,7 @@ class MyQ {
   }
 
   getLightState(id) {
-    return getDeviceState(id, 'lightstate')
+    return getDeviceState(this, id, 'lightstate')
       .then(result => {
         if (result.returnCode !== 0) {
           return result;
