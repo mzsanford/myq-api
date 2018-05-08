@@ -1,1 +1,1 @@
-module.exports = require('./dist/myq');
+module.exports = require('./src/myq');
